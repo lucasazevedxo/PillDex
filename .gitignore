@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.expo/
+dist/
+coverage/
+*.log
+
+
+frontend/.expo-template-git/
+artifacts/

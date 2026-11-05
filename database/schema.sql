@@ -1,0 +1,18 @@
+CREATE DATABASE IF NOT EXISTS pilldex_db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE pilldex_db;
+CREATE TABLE IF NOT EXISTS medicamentos (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ nome VARCHAR(150) NOT NULL,
+ principio_ativo VARCHAR(150), descricao TEXT, indicacoes TEXT, efeitos_colaterais TEXT,
+ contraindicacoes TEXT, precaucoes TEXT, fonte VARCHAR(255), url_bula TEXT,
+ criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ atualizado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ CONSTRAINT chk_nome CHECK (CHAR_LENGTH(TRIM(nome)) > 0),
+ INDEX idx_medicamentos_nome (nome), INDEX idx_medicamentos_principio (principio_ativo)
+) ENGINE=InnoDB;
+CREATE TABLE IF NOT EXISTS usuarios (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, nome VARCHAR(150) NOT NULL,
+ email VARCHAR(254) NOT NULL UNIQUE, senha_hash VARCHAR(255) NOT NULL,
+ nivel ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
+ criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
