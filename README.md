@@ -1,69 +1,15 @@
-# PillDex — Uma Enciclopédia Farmacêutica
-
-Aplicativo de consulta informativa para adultos, idosos e cuidadores. Entrega 2 do curso técnico de desenvolvimento de sistemas. React Native + Expo + React Navigation → Fetch → Express → MySQL. Não realiza diagnóstico, prescrição ou recomendação de tratamento.
-
-## Instalação no Windows
-
-Requer Node.js 22.13+ e MySQL 8.0. Execute no PowerShell, na raiz do repositório:
-
-    cd backend
-    npm.cmd ci
-    Copy-Item .env.example .env
-
-Preencha DB_HOST, DB_PORT, DB_USER e DB_PASSWORD em backend/.env. DB_NAME deve ser pilldex_db; o script fornecido cria esse banco fixo. Use um usuário com permissão para criar o banco e tabelas; depois prefira usuário específico com SELECT e INSERT. Não publique credenciais. Caso .env já exista, preserve suas configurações.
-
-    npm.cmd run db:setup
-    npm.cmd test
-    npm.cmd run test:integration
-    npm.cmd start
-
-O setup executa database/schema.sql e database/seed.sql. Usa CREATE IF NOT EXISTS e seed sem duplicação por nome; não apaga dados. Não migra tabelas preexistentes incompatíveis. Alternativa: abra os dois arquivos no MySQL Workbench e execute primeiro schema.sql, depois seed.sql.
-
-Em outro terminal, a partir da raiz:
-
-    cd frontend
-    npm.cmd ci
-    Copy-Item .env.example .env
-    npm.cmd run web
-
-Abra http://localhost:8081. Configure EXPO_PUBLIC_API_URL=http://127.0.0.1:3000/api no .env do frontend. Reinicie o Expo após alterar variáveis. Teste http://127.0.0.1:3000/api/health: servidor e banco devem estar online.
-
-## Android e rede
-
-Para aparelho físico, use EXPO_PUBLIC_API_URL=http://IP_LOCAL_DO_PC:3000/api, HOST=0.0.0.0 no backend e a mesma rede Wi-Fi. Autorize a porta 3000 no firewall apenas na rede privada apropriada. Localhost no aparelho aponta para o próprio aparelho. Emulador Android padrão pode usar 10.0.2.2. Execute npm.cmd run android ou leia o QR code com Expo Go compatível com SDK 58. CORS_ORIGINS aceita uma lista separada por vírgulas de origens Web exatas, incluindo porta. CORS não é autenticação.
-
-## Funcionalidades
-
-Cinco telas: Início, Pesquisa, Resultados, Detalhes e Administração. Dados vêm exclusivamente da API/MySQL. Listagem atualiza ao receber foco. Pesquisa por nome/princípio ativo; detalhes por ID; cadastro com validação, mensagens de sucesso/erro, loading e estados vazios. Links HTTP/HTTPS cadastrados abrem no navegador. Conteúdo clínico com fonte obrigatória; a validade editorial da fonte depende de revisão humana.
-
-## API
-
-GET /api/health; GET /api/medicamentos; GET /api/medicamentos?busca=nome; GET /api/medicamentos/:id; POST /api/medicamentos. JSON de sucesso: {success:true,data:...}; erro: {success:false,error:{message,fields?}}. Health usa data.server e data.database e retorna 503 se o MySQL estiver indisponível. Veja docs/rotas-api.md.
-
-## Limites desta entrega
-
-Cadastro e API POST não possuem autenticação. Não disponibilize o backend publicamente. Não há login simulado. JWT, hash de senha, Bearer Token, autorização admin/usuario, PUT e DELETE ficam para a Entrega 3. A tabela usuarios está modelada e não recebe dados nesta etapa.
-
-Os registros de demonstração têm informações clínicas vazias e pendentes de validação. Não são bulas revisadas. Fonte oficial de referência: https://www.gov.br/anvisa/pt-br/sistemas/bulario-eletronico. Links de bula específica permanecem vazios; o portal geral não é apresentado como bula de um medicamento.
-
-## Estrutura e validação
-
-frontend/src contém screens, components, navigation, services e styles. backend/src contém config, controllers, models, routes e middlewares. database contém schema e seed; docs contém requisitos, modelagem, navegação, API e checklist de evidências.
-
-npm.cmd test no backend executa testes HTTP com banco substituído exclusivamente nos testes. npm.cmd run test:integration usa MySQL real e deixa um registro técnico identificado no catálogo, sem conteúdo clínico. Execute esse teste apenas em ambiente de desenvolvimento. No frontend, npx.cmd expo install --check valida compatibilidade e npx.cmd expo export --platform web valida o bundle. Compilação não comprova navegação visual nem execução no Android; veja docs/checklist-entrega-2.md para resultados efetivamente observados.
-
-## Versionamento
-
-.gitignore exclui .env, node_modules, .expo, dist, caches, temporários e arquivos de chaves privadas. Repositório oficial: [lucasazevedxo/PillDex](https://github.com/lucasazevedxo/PillDex), remoto origin e branch principal main. Mantenha .env.example sem credenciais reais. Consulte [a auditoria da Entrega 2](docs/auditoria-entrega-2.md) para os resultados técnicos e pendências; ela registra o estado observado antes desta preparação de versionamento. O envio ao GitHub não altera os resultados dos testes nem resolve as pendências funcionais da auditoria.
-
-## Teste de interface e qualidade de código
-
-Na raiz, execute npm.cmd ci para instalar Playwright e Prettier. Com API e Expo Web em execução, npm.cmd run test:web usa o Edge instalado em modo headless para testar as cinco telas, POST real, erro/retry e viewport móvel. As capturas ficam em artifacts/ (ignorado pelo Git). Cada execução cria um registro técnico identificado no banco. npm.cmd run format formata os arquivos.
-
-No frontend, npm.cmd run lint executa ESLint; npm.cmd run typecheck executa o compilador em arquivos JavaScript com jsconfig.json, sem emissão e sem tipagem estática estrita (checkJs=false). O aplicativo permanece inteiramente em JavaScript. As versões são resolvidas pelo Expo e registradas nos lockfiles; veja a [referência do SDK 58](https://docs.expo.dev/versions/v58.0.0/). Os alertas conhecidos do npm audit e os testes executados estão em docs/checklist-entrega-2.md.
-
-## CORS e desconexão Metro
-
-Expo Web pode usar http://localhost:8081 ou http://localhost:8082 (também 127.0.0.1). As duas portas estão na configuração CORS local e no exemplo do backend. Para recuperar Metro com cache limpo: no frontend, npm.cmd run web:clear -- --port 8082; abra a URL exibida pelo terminal. A API continua na porta 3000. Veja docs/correcao-cors-metro.md para diagnóstico, reprodução e testes.
-
-Diagnóstico de conexão: docs/correcao-conexao-api.md. Na raiz, node --test scripts/test-api-client.cjs valida os erros do Fetch, contratos HTTP e JSON.
+1. Identificação do projeto Nome da aplicação: PillDex – Uma enciclopédia farmacêutica. Tema: Acesso simplificado às informações sobre medicamentos. Tipo de aplicação: Aplicativo mobile. Tecnologias previstas: React Native, Expo, React Navigation, Node.js, Express e MySQL. Descrição geral: O PillDex é uma aplicação mobile que tem como objetivo facilitar o acesso e a compreensão das informações sobre medicamentos. A aplicação permitirá que os usuários pesquisem medicamentos e consultem resumos de suas bulas, organizados em categorias como indicações, efeitos colaterais, contraindicações e precauções. A proposta é apresentar informações confiáveis em uma linguagem simples e acessível, mantendo a possibilidade de consultar as bulas completas. O aplicativo terá como foco a educação e a informação, sem substituir orientações médicas ou farmacêuticas.
+2. Problema identificado Problema principal: A dificuldade de acesso, compreensão e interpretação das informações presentes nas bulas dos medicamentos. Contextualização: As bulas dos medicamentos apresentam informações importantes para a utilização consciente desses produtos. Entretanto, sua extensão e a presença de termos técnicos podem dificultar a compreensão por parte de pessoas que não possuem conhecimentos específicos na área da saúde. Além disso, encontrar rapidamente informações específicas, como possíveis efeitos colaterais, contraindicações e precauções, pode ser uma tarefa difícil para alguns usuários. Essa dificuldade pode contribuir para interpretações incorretas e para o desconhecimento de cuidados importantes relacionados aos medicamentos.
+Público afetado: O público-alvo é composto por pessoas que utilizam medicamentos e apresentam dificuldades para compreender as informações das bulas, incluindo adultos, idosos, cuidadores e pessoas com pouca familiaridade com termos médicos. Pergunta norteadora: Como uma aplicação mobile pode facilitar o acesso e a compreensão das informações sobre medicamentos, tornando as bulas mais acessíveis ao público? 3. Justificativa O desenvolvimento do PillDex justifica-se pela necessidade de tornar as informações sobre medicamentos mais acessíveis e compreensíveis para a população. Embora as bulas contenham informações importantes, a linguagem técnica e a quantidade de conteúdo podem dificultar a localização e a compreensão de orientações específicas. Diante desse cenário, a aplicação propõe organizar as informações em categorias e apresentá-las de maneira resumida, facilitando a consulta pelos usuários. Além de contribuir para a compreensão das informações, o projeto busca incentivar a consulta às fontes oficiais e promover o uso consciente de medicamentos. A escolha de uma aplicação mobile permite disponibilizar essas informações de maneira prática, por meio de uma interface simples e intuitiva. 4. Objetivos 4.1 Objetivo geral Desenvolver uma aplicação mobile que facilite o acesso e a compreensão das informações sobre medicamentos por meio de resumos organizados, confiáveis e apresentados em linguagem acessível. 4.2 Objetivos específicos
+- Identificar as principais dificuldades relacionadas à compreensão das bulas.
+- Organizar as informações dos medicamentos em categorias.
+- Desenvolver uma ferramenta de pesquisa de medicamentos.
+- Disponibilizar resumos das informações presentes nas bulas oficiais.
+- Facilitar o acesso às informações sobre contraindicações, efeitos colaterais e precauções.
+- Desenvolver uma interface simples e intuitiva.
+- Implementar progressivamente um sistema de cadastro, autenticação e controle de permissões.
+- Manter as informações organizadas e atualizadas conforme as fontes utilizadas.
+5. Proposta de solução A solução proposta consiste no desenvolvimento do PillDex, um aplicativo mobile que permitirá aos usuários pesquisar medicamentos e consultar suas principais informações de maneira simplificada. Ao selecionar um medicamento, o usuário poderá visualizar um resumo organizado em categorias, facilitando a localização das informações desejadas. A aplicação também deverá disponibilizar a identificação da fonte das informações e, quando disponível, o acesso à bula oficial completa. O desenvolvimento será realizado de forma incremental. Na primeira etapa, será criada a estrutura visual e navegável do aplicativo. Nas etapas seguintes, serão implementados o banco de dados, a API, as operações de cadastro e consulta, a autenticação JWT e os níveis de acesso. O aplicativo terá caráter informativo e não substituirá o acompanhamento de profissionais de saúde.
+6. Tipos de usuário Admin: Pesquisar medicamentos e cadastrar, editar ou excluir os registros do catálogo. Usuário: Pesquisar medicamentos e consultar suas informações.
+7. Telas previstas
+   8. Fluxo de navegação inicial Início  Pesquisa  Lista de resultados  Detalhes do medicamento  Bula completa
