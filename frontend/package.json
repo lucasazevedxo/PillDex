@@ -21,7 +21,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "typecheck": "tsc --project jsconfig.json --noEmit"
+    "typecheck": "tsc --project jsconfig.json --noEmit",
+    "web:clear": "expo start --web --clear"
   },
   "private": true,
   "devDependencies": {

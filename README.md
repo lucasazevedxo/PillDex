@@ -26,7 +26,7 @@ Em outro terminal, a partir da raiz:
     Copy-Item .env.example .env
     npm.cmd run web
 
-Abra http://localhost:8081. Configure EXPO_PUBLIC_API_URL=http://localhost:3000/api no .env do frontend. Reinicie o Expo após alterar variáveis. Teste http://127.0.0.1:3000/api/health: servidor e banco devem estar online.
+Abra http://localhost:8081. Configure EXPO_PUBLIC_API_URL=http://127.0.0.1:3000/api no .env do frontend. Reinicie o Expo após alterar variáveis. Teste http://127.0.0.1:3000/api/health: servidor e banco devem estar online.
 
 ## Android e rede
 
@@ -61,3 +61,9 @@ npm.cmd test no backend executa testes HTTP com banco substituído exclusivament
 Na raiz, execute npm.cmd ci para instalar Playwright e Prettier. Com API e Expo Web em execução, npm.cmd run test:web usa o Edge instalado em modo headless para testar as cinco telas, POST real, erro/retry e viewport móvel. As capturas ficam em artifacts/ (ignorado pelo Git). Cada execução cria um registro técnico identificado no banco. npm.cmd run format formata os arquivos.
 
 No frontend, npm.cmd run lint executa ESLint; npm.cmd run typecheck executa o compilador em arquivos JavaScript com jsconfig.json, sem emissão e sem tipagem estática estrita (checkJs=false). O aplicativo permanece inteiramente em JavaScript. As versões são resolvidas pelo Expo e registradas nos lockfiles; veja a [referência do SDK 58](https://docs.expo.dev/versions/v58.0.0/). Os alertas conhecidos do npm audit e os testes executados estão em docs/checklist-entrega-2.md.
+
+## CORS e desconexão Metro
+
+Expo Web pode usar http://localhost:8081 ou http://localhost:8082 (também 127.0.0.1). As duas portas estão na configuração CORS local e no exemplo do backend. Para recuperar Metro com cache limpo: no frontend, npm.cmd run web:clear -- --port 8082; abra a URL exibida pelo terminal. A API continua na porta 3000. Veja docs/correcao-cors-metro.md para diagnóstico, reprodução e testes.
+
+Diagnóstico de conexão: docs/correcao-conexao-api.md. Na raiz, node --test scripts/test-api-client.cjs valida os erros do Fetch, contratos HTTP e JSON.

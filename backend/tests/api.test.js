@@ -113,3 +113,55 @@ test("erro de banco não vaza credenciais", async () => {
   assert.ok(!JSON.stringify(r.body).includes("secreta"));
 });
 test.after(() => pool.end());
+
+test("CORS permite GET e preflight de GET/POST nas duas portas Expo", async () => {
+  for (const origin of [
+    "http://localhost:8081",
+    "http://localhost:8082",
+    "http://127.0.0.1:8081",
+    "http://127.0.0.1:8082",
+  ]) {
+    const result = await request(app)
+      .get("/api/medicamentos?busca=Teste")
+      .set("Origin", origin);
+    assert.equal(result.status, 200);
+    assert.equal(result.headers["access-control-allow-origin"], origin);
+    for (const method of ["GET", "POST"]) {
+      const preflight = await request(app)
+        .options("/api/medicamentos?busca=")
+        .set("Origin", origin)
+        .set("Access-Control-Request-Method", method)
+        .set("Access-Control-Request-Headers", "content-type");
+      assert.equal(preflight.status, 204);
+      assert.equal(preflight.headers["access-control-allow-origin"], origin);
+      assert.ok(
+        preflight.headers["access-control-allow-methods"]
+          .split(",")
+          .includes(method),
+      );
+      assert.match(
+        preflight.headers["access-control-allow-headers"],
+        /content-type/i,
+      );
+    }
+  }
+});
+test("preflight não acessa banco e rejeita origem não autorizada", async () => {
+  const appOffline = createApp({
+    execute: async () => {
+      throw Error("Não acessar banco no preflight");
+    },
+  });
+  const result = await request(appOffline)
+    .options("/api/medicamentos")
+    .set("Origin", "http://localhost:8082")
+    .set("Access-Control-Request-Method", "POST")
+    .set("Access-Control-Request-Headers", "content-type");
+  assert.equal(result.status, 204);
+  const denied = await request(app)
+    .options("/api/medicamentos")
+    .set("Origin", "https://example.org")
+    .set("Access-Control-Request-Method", "GET");
+  assert.equal(denied.status, 403);
+  assert.equal(denied.headers["access-control-allow-origin"], undefined);
+});

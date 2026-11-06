@@ -8,12 +8,17 @@ export function createApp(db = pool) {
   const app = express();
   app.disable("x-powered-by");
   const origins = (
-    process.env.CORS_ORIGINS || "http://localhost:8081,http://127.0.0.1:8081"
+    process.env.CORS_ORIGINS ||
+    "http://localhost:8081,http://localhost:8082,http://127.0.0.1:8081,http://127.0.0.1:8082"
   )
     .split(",")
     .map((s) => s.trim());
   app.use(
+    // CORS global também responde OPTIONS antes de JSON, banco e rotas.
     cors({
+      methods: ["GET", "POST", "OPTIONS"],
+      allowedHeaders: ["Content-Type"],
+      optionsSuccessStatus: 204,
       origin(origin, cb) {
         cb(
           origin && !origins.includes(origin)

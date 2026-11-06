@@ -11,10 +11,10 @@
     "test:integration": "node scripts/verify-integration.js"
   },
   "dependencies": {
-    "express": "^5.1.0",
-    "mysql2": "^3.14.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.0",
-    "cors": "^2.8.5"
+    "express": "^5.1.0",
+    "mysql2": "^3.14.0"
   },
   "devDependencies": {
     "supertest": "^7.1.0"

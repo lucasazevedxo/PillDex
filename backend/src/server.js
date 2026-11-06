@@ -12,3 +12,15 @@ for (const signal of ["SIGINT", "SIGTERM"])
       process.exit(0);
     }),
   );
+
+server.on("error", async (error) => {
+  console.error(
+    error.code === "EADDRINUSE"
+      ? "A porta " +
+          port +
+          " já está em uso. Verifique a instância da API antes de iniciar outra."
+      : "Não foi possível iniciar a API: " + error.code,
+  );
+  await pool.end();
+  process.exit(1);
+});
