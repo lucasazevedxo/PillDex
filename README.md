@@ -54,7 +54,7 @@ npm.cmd test no backend executa testes HTTP com banco substituído exclusivament
 
 ## Versionamento
 
-.gitignore exclui .env, node_modules, .expo e dist. Faça commits de marcos reais e configure seu remoto GitHub. Nenhum push é automático. Não versionar credenciais.
+.gitignore exclui .env, node_modules, .expo, dist, caches, temporários e arquivos de chaves privadas. Repositório oficial: [lucasazevedxo/PillDex](https://github.com/lucasazevedxo/PillDex), remoto origin e branch principal main. Mantenha .env.example sem credenciais reais. Consulte [a auditoria da Entrega 2](docs/auditoria-entrega-2.md) para os resultados técnicos e pendências; ela registra o estado observado antes desta preparação de versionamento. O envio ao GitHub não altera os resultados dos testes nem resolve as pendências funcionais da auditoria.
 
 ## Teste de interface e qualidade de código
 

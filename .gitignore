@@ -10,3 +10,16 @@ coverage/
 
 frontend/.expo-template-git/
 artifacts/
+
+# Chaves privadas, temporarios e caches locais
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.tmp
+*.temp
+*.tsbuildinfo
+.cache/
+web-build/
