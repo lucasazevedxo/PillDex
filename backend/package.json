@@ -8,12 +8,17 @@
     "dev": "node --watch src/server.js",
     "test": "node --test",
     "db:setup": "node scripts/setup-db.js",
-    "test:integration": "node scripts/verify-integration.js"
+    "db:migrate": "node scripts/migrate.js",
+    "admin:create": "node scripts/create-admin.js",
+    "test:integration": "node scripts/verify-entrega-3.js"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.7.3",
+    "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.14.0"
   },
   "devDependencies": {

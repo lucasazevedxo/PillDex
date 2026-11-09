@@ -69,6 +69,10 @@ export const api = {
   list: (search = "") =>
     request("/medicamentos?busca=" + encodeURIComponent(search)),
   find: (id) => request("/medicamentos/" + id),
-  create: (data) =>
-    request("/medicamentos", { method: "POST", body: JSON.stringify(data) }),
+  create: (data, token) =>
+    request("/medicamentos", {
+      method: "POST",
+      body: JSON.stringify(data),
+      ...(token ? { headers: { Authorization: "Bearer " + token } } : {}),
+    }),
 };

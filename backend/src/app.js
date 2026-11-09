@@ -4,6 +4,9 @@ import { pool } from "./config/db.js";
 import { createMedicineModel } from "./models/medicamentos.js";
 import { medicineRoutes } from "./routes/medicamentos.js";
 import { HttpError, errorHandler } from "./middlewares/errors.js";
+import { createUserModel } from "./models/usuarios.js";
+import { authRoutes } from "./routes/auth.js";
+import { authenticate, autorizarNivel } from "./auth.js";
 export function createApp(db = pool) {
   const app = express();
   app.disable("x-powered-by");
@@ -16,8 +19,8 @@ export function createApp(db = pool) {
   app.use(
     // CORS global também responde OPTIONS antes de JSON, banco e rotas.
     cors({
-      methods: ["GET", "POST", "OPTIONS"],
-      allowedHeaders: ["Content-Type"],
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
       optionsSuccessStatus: 204,
       origin(origin, cb) {
         cb(
@@ -44,7 +47,16 @@ export function createApp(db = pool) {
       });
     }
   });
-  app.use("/api/medicamentos", medicineRoutes(createMedicineModel(db)));
+  const users = createUserModel(db);
+  app.use("/api/auth", authRoutes(users));
+  app.use(
+    "/api/medicamentos",
+    medicineRoutes(
+      createMedicineModel(db),
+      authenticate(users),
+      autorizarNivel("admin"),
+    ),
+  );
   app.use((req, res, next) => next(new HttpError(404, "Rota não encontrada.")));
   app.use(errorHandler);
   return app;

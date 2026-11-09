@@ -1,3 +1,7 @@
+# Evolução Entrega 3
+
+A tabela usuarios agora inclui atualizado_em (TIMESTAMP com atualização automática). A migração aditiva e idempotente é executada com `npm.cmd run db:migrate` no backend. Email continua único; nivel é admin/usuario; senhas são gravadas exclusivamente como hash bcrypt. Não houve exclusão de tabelas ou registros existentes. Veja [Entrega 3](entrega-3.md). O texto abaixo preserva a modelagem anterior.
+
 # Modelagem MySQL
 
 Banco pilldex_db, MySQL 8.0, InnoDB, utf8mb4 e collation utf8mb4_0900_ai_ci (busca sem distinção de acento/maiúscula).

@@ -1,3 +1,9 @@
+# Atualização técnica — Entrega 3
+
+Autenticação real com MySQL, bcrypt, JWT HS256, Bearer Token e autorização pelo nível atual no banco. Migração aditiva de usuarios.atualizado_em; provisionamento local sem senha fixa; CRUD completo com queries parametrizadas. Frontend centraliza sessão em AuthContext, usa SecureStore nativo e memória na Web. Login, cadastro, perfil e painel administrativo foram integrados à navegação existente. Detalhes, configuração, arquivos e limitações estão em [entrega-3.md](entrega-3.md), [rotas-api.md](rotas-api.md) e [checklist-entrega-3.md](checklist-entrega-3.md).
+
+Os registros abaixo documentam a Entrega 2 e preservam a evolução histórica.
+
 # Documentação técnica
 
 PillDex, Entrega 2: aplicativo de consulta farmacêutica organizado em cliente mobile/Web, API REST e persistência MySQL. Problema, público, justificativa, objetivos e requisitos estão em requisitos-funcionais.md. Instalação, ambiente e execução estão no README.

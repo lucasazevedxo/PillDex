@@ -16,6 +16,7 @@ try {
     );
     console.log(name + " executado.");
   }
+  await import("./migrate.js");
 } finally {
   await connection.end();
   await pool.end();

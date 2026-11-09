@@ -3,9 +3,15 @@ import assert from "node:assert/strict";
 import request from "supertest";
 import { createApp } from "../src/app.js";
 import { pool } from "../src/config/db.js";
+import { randomBytes } from "node:crypto";
+import { issueToken } from "../src/auth.js";
+process.env.JWT_SECRET = randomBytes(48).toString("hex");
+const adminToken = issueToken({ id: 7, nivel: "admin" }).token;
 const fake = {
   query: async () => [[]],
   execute: async (sql, args) => {
+    if (sql.includes("FROM usuarios"))
+      return [[{ id: 7, nome: "Admin teste", nivel: "admin" }]];
     if (sql.startsWith("INSERT")) return [{ insertId: 7 }];
     if (sql.includes("WHERE id"))
       return [args[0] === 7 ? [{ id: 7, nome: "Teste" }] : []];
@@ -59,7 +65,12 @@ test("POST valida nome, tipos, fonte e URL", async () => {
     { nome: "A", fonte: "x".repeat(256) },
   ]) {
     assert.equal(
-      (await request(app).post("/api/medicamentos").send(body)).status,
+      (
+        await request(app)
+          .post("/api/medicamentos")
+          .set("Authorization", "Bearer " + adminToken)
+          .send(body)
+      ).status,
       400,
     );
   }
@@ -67,6 +78,7 @@ test("POST valida nome, tipos, fonte e URL", async () => {
 test("POST responde 201 e Location", async () => {
   const r = await request(app)
     .post("/api/medicamentos")
+    .set("Authorization", "Bearer " + adminToken)
     .send({ nome: "Teste" });
   assert.equal(r.status, 201);
   assert.equal(r.body.data.id, 7);
@@ -126,12 +138,12 @@ test("CORS permite GET e preflight de GET/POST nas duas portas Expo", async () =
       .set("Origin", origin);
     assert.equal(result.status, 200);
     assert.equal(result.headers["access-control-allow-origin"], origin);
-    for (const method of ["GET", "POST"]) {
+    for (const method of ["GET", "POST", "PUT", "DELETE"]) {
       const preflight = await request(app)
         .options("/api/medicamentos?busca=")
         .set("Origin", origin)
         .set("Access-Control-Request-Method", method)
-        .set("Access-Control-Request-Headers", "content-type");
+        .set("Access-Control-Request-Headers", "content-type,authorization");
       assert.equal(preflight.status, 204);
       assert.equal(preflight.headers["access-control-allow-origin"], origin);
       assert.ok(
@@ -142,6 +154,10 @@ test("CORS permite GET e preflight de GET/POST nas duas portas Expo", async () =
       assert.match(
         preflight.headers["access-control-allow-headers"],
         /content-type/i,
+      );
+      assert.match(
+        preflight.headers["access-control-allow-headers"],
+        /authorization/i,
       );
     }
   }

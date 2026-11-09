@@ -11,8 +11,10 @@ import {
 } from "../components/UI";
 import { useMedicines } from "../services/useMedicines";
 import { s } from "../styles/theme";
+import { useAuth } from "../context/AuthContext";
 export default function HomeScreen({ navigation }) {
   const state = useMedicines();
+  const { user, message } = useAuth();
   return (
     <Page>
       <View style={[s.card, { padding: 28, gap: 20 }]}>
@@ -32,10 +34,27 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate("Resultados", { busca: "" })}
         />
         <Button
-          title="Gerenciar catálogo"
-          onPress={() => navigation.navigate("Administração")}
+          title={user ? "Meu perfil" : "Entrar"}
+          onPress={() => navigation.navigate(user ? "Perfil" : "Login")}
         />
+        {!user && (
+          <Button
+            title="Criar conta"
+            onPress={() => navigation.navigate("Cadastro")}
+          />
+        )}
+        {user?.nivel === "admin" && (
+          <Button
+            title="Gerenciar catálogo"
+            onPress={() => navigation.navigate("Administração")}
+          />
+        )}
       </View>
+      {!!message && (
+        <Text accessibilityRole="alert" style={s.error}>
+          {message}
+        </Text>
+      )}
       <Text style={s.section}>Conheça o catálogo</Text>
       <Text style={s.small}>
         Informações organizadas para uma consulta mais acessível.

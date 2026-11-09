@@ -1,3 +1,7 @@
+# Fluxo atual — Entrega 3
+
+Início → Pesquisa → Resultados → Detalhes continua público. Visitantes acessam Login ou Cadastro; após autenticar, Meu perfil mostra dados e Sair. Administradores acessam Administração → Formulário de medicamento (cadastro/edição preenchida); o painel permite excluir com confirmação e cancelamento. Sessão expirada redireciona para Login. Rotas administrativas são condicionais na navegação e protegidas também na API. Veja [Entrega 3](entrega-3.md). O conteúdo abaixo registra o fluxo histórico.
+
 # Telas e navegação
 
 React Navigation Native Stack: Início → Pesquisa → Resultados → Detalhes. Início → Resultados (catálogo completo). Início → Administração → Detalhes do novo registro ou Resultados. Cabeçalho oferece retorno nativo. As listagens recarregam ao receber foco para refletir cadastros recentes.

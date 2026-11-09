@@ -1,3 +1,7 @@
+# Relatório atual
+
+A evolução, evidências, auditoria dos cinco indicadores e pendências da Entrega 3 estão em [entrega-3.md](entrega-3.md) e [checklist-entrega-3.md](checklist-entrega-3.md). O relatório abaixo preserva a Entrega 2 como histórico.
+
 # Relatório final — Entrega 2
 
 ## Arquivos e funcionalidades entregues
