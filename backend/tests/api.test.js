@@ -12,6 +12,7 @@ const fake = {
   execute: async (sql, args) => {
     if (sql.includes("FROM usuarios"))
       return [[{ id: 7, nome: "Admin teste", nivel: "admin" }]];
+    if (sql.includes("FROM medicamento_categorias")) return [[]];
     if (sql.startsWith("INSERT")) return [{ insertId: 7 }];
     if (sql.includes("WHERE id"))
       return [args[0] === 7 ? [{ id: 7, nome: "Teste" }] : []];

@@ -6,6 +6,10 @@ export class HttpError extends Error {
   }
 }
 export function errorHandler(err, req, res, next) {
+  if (err.code === "ER_ROW_IS_REFERENCED_2") {
+    err.status = 409;
+    err.message = "Este registro possui referências e não pode ser excluído.";
+  }
   const unavailable = [
     "ECONNREFUSED",
     "ETIMEDOUT",

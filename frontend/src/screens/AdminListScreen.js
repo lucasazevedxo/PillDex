@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Modal } from "react-native";
 import {
   Page,
   Heading,
@@ -21,10 +21,12 @@ export default function AdminListScreen({ navigation }) {
     setBusy(true);
     setMessage("");
     try {
-      await authenticated("/medicamentos/" + pending.id, { method: "DELETE" });
+      const result = await authenticated("/medicamentos/" + pending.id, {
+        method: "DELETE",
+      });
       setPending(null);
       state.retry();
-      setMessage("Medicamento excluído com sucesso.");
+      setMessage(result.message);
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -43,17 +45,45 @@ export default function AdminListScreen({ navigation }) {
           {message}
         </Text>
       )}
-      {pending && (
-        <View style={s.notice}>
-          <Text style={s.text}>Excluir “{pending.nome}” permanentemente?</Text>
-          <Button title="Confirmar exclusão" disabled={busy} onPress={remove} />
-          <Button
-            title="Cancelar"
-            disabled={busy}
-            onPress={() => setPending(null)}
-          />
+      <Modal
+        visible={!!pending}
+        transparent
+        animationType="fade"
+        onRequestClose={() => !busy && setPending(null)}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "#0008",
+            justifyContent: "center",
+            padding: 24,
+          }}
+        >
+          <View
+            style={[
+              s.card,
+              { width: "100%", maxWidth: 520, alignSelf: "center" },
+            ]}
+            accessibilityViewIsModal
+          >
+            <Text style={s.name}>Excluir “{pending?.nome}” do catálogo?</Text>
+            <Text style={s.text}>
+              Se houver registros pessoais, o medicamento será arquivado e as
+              bibliotecas serão preservadas.
+            </Text>
+            <Button
+              title="Confirmar exclusão"
+              disabled={busy}
+              onPress={remove}
+            />
+            <Button
+              title="Cancelar"
+              disabled={busy}
+              onPress={() => setPending(null)}
+            />
+          </View>
         </View>
-      )}
+      </Modal>
       {state.loading ? (
         <Loading />
       ) : state.error ? (

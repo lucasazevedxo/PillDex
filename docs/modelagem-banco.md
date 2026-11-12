@@ -1,3 +1,18 @@
+# Melhorias atuais
+
+Migração: `backend/scripts/migrate.js` e `database/migration-melhorias.sql`. Acrescenta em medicamentos: arquivado (BOOLEAN), classificacao_status (pendente por padrão) e classificacao_evidencia (TEXT).
+
+| Tabela                 | Campos e regras                                                                                                                           |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| categorias             | id, nome UNIQUE, descricao, tipo ENUM(indicacao,classe,organizacao), ativo                                                                |
+| medicamento_categorias | PK composta medicamento_id/categoria_id, índice de categoria; relação N:N                                                                 |
+| usuario_medicamentos   | id, usuario_id, medicamento_id, observacoes, data_inicio/data_fim DATE, ativo, criado_em/atualizado_em; UNIQUE(usuario_id,medicamento_id) |
+| lembretes              | id, usuario_medicamento_id, horario HH:MM, dias_semana JSON (0–6), data_inicio obrigatória, data_fim opcional, ativo, timestamps          |
+
+Todas as FKs usam RESTRICT. Um usuário tem N vínculos pessoais; cada vínculo tem N lembretes. IDs de notificações pertencem ao dispositivo e não são armazenados no servidor. Datas finais anteriores às iniciais são rejeitadas. DATE retorna como texto para evitar conversão de fuso.
+
+DELETE administrativo usa transação: com referência pessoal arquiva, sem referência remove categorias e medicamento. DELETE pessoal apaga explicitamente os próprios lembretes e vínculo, preservando catálogo. [Relatório e auditoria editorial](melhorias-pilldex.md).
+
 # Evolução Entrega 3
 
 A tabela usuarios agora inclui atualizado_em (TIMESTAMP com atualização automática). A migração aditiva e idempotente é executada com `npm.cmd run db:migrate` no backend. Email continua único; nivel é admin/usuario; senhas são gravadas exclusivamente como hash bcrypt. Não houve exclusão de tabelas ou registros existentes. Veja [Entrega 3](entrega-3.md). O texto abaixo preserva a modelagem anterior.

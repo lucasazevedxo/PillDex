@@ -10,7 +10,8 @@
     "db:setup": "node scripts/setup-db.js",
     "db:migrate": "node scripts/migrate.js",
     "admin:create": "node scripts/create-admin.js",
-    "test:integration": "node scripts/verify-entrega-3.js"
+    "test:integration": "node scripts/verify-entrega-3.js",
+    "test:melhorias": "node scripts/verify-melhorias.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

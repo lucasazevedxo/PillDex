@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { api } from "./api";
-export function useMedicines(search = "") {
+export function useMedicines(search = "", categories = "") {
   const [state, setState] = useState({ loading: true, data: [], error: null });
   const [version, setVersion] = useState(0);
   useFocusEffect(
@@ -9,7 +9,7 @@ export function useMedicines(search = "") {
       let active = true;
       setState({ loading: true, data: [], error: null, revision: version });
       api
-        .list(search)
+        .list(search, categories)
         .then((data) => {
           if (active)
             setState({ loading: false, data, error: null, revision: version });
@@ -26,7 +26,7 @@ export function useMedicines(search = "") {
       return () => {
         active = false;
       };
-    }, [search, version]),
+    }, [search, categories, version]),
   );
   return { ...state, retry: () => setVersion((v) => v + 1) };
 }

@@ -7,6 +7,7 @@ import { HttpError, errorHandler } from "./middlewares/errors.js";
 import { createUserModel } from "./models/usuarios.js";
 import { authRoutes } from "./routes/auth.js";
 import { authenticate, autorizarNivel } from "./auth.js";
+import { personalRoutes } from "./routes/personal.js";
 export function createApp(db = pool) {
   const app = express();
   app.disable("x-powered-by");
@@ -49,6 +50,13 @@ export function createApp(db = pool) {
   });
   const users = createUserModel(db);
   app.use("/api/auth", authRoutes(users));
+  app.get("/api/categorias", async (req, res) => {
+    const [rows] = await db.execute(
+      "SELECT * FROM categorias WHERE ativo = 1 ORDER BY nome",
+    );
+    res.json({ success: true, data: rows });
+  });
+  app.use("/api", personalRoutes(db, authenticate(users)));
   app.use(
     "/api/medicamentos",
     medicineRoutes(

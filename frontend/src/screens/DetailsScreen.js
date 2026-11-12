@@ -3,7 +3,9 @@ import { View, Text, Linking } from "react-native";
 import { Page, Heading, Loading, Failure, Button } from "../components/UI";
 import { api } from "../services/api";
 import { s } from "../styles/theme";
+import { useAuth } from "../context/AuthContext";
 export default function DetailsScreen({ route }) {
+  const { authenticated } = useAuth();
   const [state, setState] = useState({ key: null });
   const [version, setVersion] = useState(0);
   const [linkError, setLinkError] = useState("");
@@ -11,8 +13,12 @@ export default function DetailsScreen({ route }) {
   const requestKey = id + ":" + version;
   useEffect(() => {
     let active = true;
-    api
-      .find(id)
+    (route.params.pessoalId
+      ? authenticated("/meus-medicamentos/" + route.params.pessoalId).then(
+          (row) => row.medicamento,
+        )
+      : api.find(id)
+    )
       .then((data) => {
         if (active) setState({ key: requestKey, data });
       })
@@ -22,7 +28,8 @@ export default function DetailsScreen({ route }) {
     return () => {
       active = false;
     };
-  }, [id, requestKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, requestKey, route.params.pessoalId]);
   if (state.key !== requestKey)
     return (
       <Page>

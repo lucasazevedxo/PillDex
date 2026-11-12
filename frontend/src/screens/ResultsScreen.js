@@ -13,7 +13,8 @@ import { useMedicines } from "../services/useMedicines";
 import { s } from "../styles/theme";
 export default function ResultsScreen({ navigation, route }) {
   const search = route.params?.busca || "";
-  const state = useMedicines(search);
+  const categories = route.params?.categorias || "";
+  const state = useMedicines(search, categories);
   return (
     <Page>
       <Heading
@@ -29,6 +30,12 @@ export default function ResultsScreen({ navigation, route }) {
         title="Nova pesquisa"
         onPress={() => navigation.navigate("Pesquisa")}
       />
+      {!!categories && (
+        <Text style={s.small}>
+          {categories.split(",").length} filtro(s) de categoria ativo(s) ·
+          qualquer categoria
+        </Text>
+      )}
       {state.loading ? (
         <Loading />
       ) : state.error ? (

@@ -48,6 +48,28 @@ export function validateMedicine(body) {
   }
   if (Object.keys(errors).length)
     throw new HttpError(400, "Revise os campos informados.", errors);
+  if (body.categorias !== undefined) {
+    if (
+      !Array.isArray(body.categorias) ||
+      body.categorias.length > 30 ||
+      body.categorias.some((id) => !Number.isSafeInteger(id) || id < 1)
+    )
+      throw new HttpError(400, "Categorias inválidas.");
+    data.categorias = [...new Set(body.categorias)];
+    if (
+      data.categorias.length &&
+      (typeof body.classificacao_evidencia !== "string" ||
+        !body.classificacao_evidencia.trim() ||
+        body.classificacao_evidencia.length > 2000)
+    )
+      throw new HttpError(
+        400,
+        "Informe a evidência verificada para as categorias (até 2000 caracteres).",
+      );
+    data.classificacao_evidencia = data.categorias.length
+      ? body.classificacao_evidencia.trim()
+      : null;
+  }
   return data;
 }
 export function parseId(value) {

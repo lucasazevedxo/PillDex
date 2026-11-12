@@ -1,3 +1,13 @@
+# Atualização técnica — melhorias
+
+O frontend mantém React Navigation e inclui LibraryScreen/RemindersScreen. Page fornece os cinco acessos principais. CategoryPicker carrega categorias reais; filtros combinam texto e múltiplas categorias. EditorDialog/Confirm/AdminList utilizam Modal compatível com Web/Android. Details permite consulta autenticada de medicamento arquivado pela biblioteca.
+
+Backend acrescenta personalRoutes, validação de datas/horários/propriedade e transações. Arquivamento usa bloqueio do medicamento e FKs RESTRICT. As quatro novas tabelas e três colunas de catálogo são criadas pelo runner idempotente de migrações. Não há classificação automática baseada no nome; os oito registros inspecionados permanecem pendentes por insuficiência de fontes.
+
+ReminderContext reconcilia banco com agendamentos locais após login/restauração, mutação, retomada e durante uso. notifications.native.js usa expo-notifications SDK 58, canal privado e permissão de alarmes exatos; notifications.js oferece alternativa Web sem agendamento. IDs pertencem ao dispositivo. Janela de 30 dias/60 ocorrências, renovada com o app aberto e online. Texto genérico evita divulgar informação clínica na tela bloqueada. Datas locais respeitam calendário e transições de fuso ao reconciliar.
+
+Entrega real Android não foi validada: não há dispositivo conectado. Bundle Android, MySQL real, Web e testes do agendador com adaptador simulado foram executados. Consulte [o relatório completo](melhorias-pilldex.md), [rotas](rotas-api.md) e [modelagem](modelagem-banco.md). Os registros abaixo preservam o histórico.
+
 # Atualização técnica — Entrega 3
 
 Autenticação real com MySQL, bcrypt, JWT HS256, Bearer Token e autorização pelo nível atual no banco. Migração aditiva de usuarios.atualizado_em; provisionamento local sem senha fixa; CRUD completo com queries parametrizadas. Frontend centraliza sessão em AuthContext, usa SecureStore nativo e memória na Web. Login, cadastro, perfil e painel administrativo foram integrados à navegação existente. Detalhes, configuração, arquivos e limitações estão em [entrega-3.md](entrega-3.md), [rotas-api.md](rotas-api.md) e [checklist-entrega-3.md](checklist-entrega-3.md).

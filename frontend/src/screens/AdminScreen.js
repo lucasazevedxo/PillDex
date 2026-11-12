@@ -11,6 +11,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
 import { s } from "../styles/theme";
+import CategoryPicker from "../components/CategoryPicker";
 const fields = [
   ["nome", "Nome *"],
   ["principio_ativo", "Princípio ativo"],
@@ -123,6 +124,25 @@ export default function AdminScreen({ navigation, route }) {
         </Text>
       </View>
       <View style={s.card}>
+        <Text style={s.name}>Categorias verificadas</Text>
+        <CategoryPicker
+          value={form.categorias || []}
+          disabled={busy}
+          onChange={(categorias) => setForm((old) => ({ ...old, categorias }))}
+        />
+        <Field
+          label="Evidência da classificação"
+          value={form.classificacao_evidencia || ""}
+          maxLength={2000}
+          multiline
+          onChangeText={(classificacao_evidencia) =>
+            setForm((old) => ({ ...old, classificacao_evidencia }))
+          }
+        />
+        <Text style={s.small}>
+          Sem evidência suficiente, deixe sem categorias. Status:{" "}
+          {form.classificacao_status || "pendente"}.
+        </Text>
         {fields.map(([key, label]) => (
           <Field
             key={key}

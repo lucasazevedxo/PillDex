@@ -5,6 +5,8 @@
   "scripts": {
     "format": "prettier --write \"frontend/{App.js,app.json,src/**/*.js}\" \"backend/{src,scripts,tests}/**/*.js\" \"scripts/*.cjs\" \"docs/*.md\" README.md",
     "test:web": "node scripts/test-web-e3.cjs",
+    "test:melhorias:web": "node scripts/test-web-melhorias.cjs",
+    "test:lembretes": "node --test scripts/test-reminders.cjs",
     "test": "npm --prefix backend test"
   },
   "devDependencies": {

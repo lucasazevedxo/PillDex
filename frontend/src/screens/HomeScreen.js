@@ -30,6 +30,14 @@ export default function HomeScreen({ navigation }) {
       </View>
       <View style={s.row}>
         <Button
+          title="Meus Medicamentos"
+          onPress={() => navigation.navigate("Meus Medicamentos")}
+        />
+        <Button
+          title="Lembretes"
+          onPress={() => navigation.navigate("Lembretes")}
+        />
+        <Button
           title="Explorar catálogo"
           onPress={() => navigation.navigate("Resultados", { busca: "" })}
         />

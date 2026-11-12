@@ -8,6 +8,7 @@ export const dbOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME || "pilldex_db",
   charset: "utf8mb4",
+  dateStrings: ["DATE"],
   connectTimeout: 5000,
 };
 export const pool = mysql.createPool({

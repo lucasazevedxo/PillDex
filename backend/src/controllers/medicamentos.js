@@ -9,18 +9,37 @@ export function medicineController(model) {
       res.json({ success: true, data });
     },
     remove: async (req, res) => {
-      if (!(await model.remove(parseId(req.params.id))))
-        throw new HttpError(404, "Medicamento não encontrado.");
+      const action = await model.remove(parseId(req.params.id));
+      if (!action) throw new HttpError(404, "Medicamento não encontrado.");
       res.json({
         success: true,
-        data: { message: "Medicamento excluído com sucesso." },
+        data: {
+          action,
+          message:
+            action === "arquivado"
+              ? "Medicamento arquivado. Bibliotecas pessoais preservadas."
+              : "Medicamento excluído com sucesso.",
+        },
       });
     },
     list: async (req, res) => {
       const search = req.query.busca ?? "";
       if (typeof search !== "string" || search.length > 150)
         throw new HttpError(400, "Busca inválida: máximo de 150 caracteres.");
-      res.json({ success: true, data: await model.list(search.trim()) });
+      const raw = req.query.categorias ?? "";
+      if (
+        typeof raw !== "string" ||
+        raw.length > 300 ||
+        (raw && !/^[1-9]\d*(,[1-9]\d*)*$/.test(raw))
+      )
+        throw new HttpError(400, "Categorias inválidas.");
+      const categories = [...new Set(raw ? raw.split(",").map(parseId) : [])];
+      if (categories.length > 30)
+        throw new HttpError(400, "Selecione até 30 categorias.");
+      res.json({
+        success: true,
+        data: await model.list(search.trim(), categories),
+      });
     },
     find: async (req, res) => {
       const data = await model.find(parseId(req.params.id));

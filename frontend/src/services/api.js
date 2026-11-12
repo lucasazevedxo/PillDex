@@ -66,8 +66,12 @@ export async function request(path, options = {}) {
   }
 }
 export const api = {
-  list: (search = "") =>
-    request("/medicamentos?busca=" + encodeURIComponent(search)),
+  list: (search = "", categories = "") =>
+    request(
+      "/medicamentos?busca=" +
+        encodeURIComponent(search) +
+        (categories ? "&categorias=" + encodeURIComponent(categories) : ""),
+    ),
   find: (id) => request("/medicamentos/" + id),
   create: (data, token) =>
     request("/medicamentos", {

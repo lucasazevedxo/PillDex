@@ -1,5 +1,29 @@
 # Contrato da API
 
+## Melhorias — contrato atual
+
+As rotas de autenticação e catálogo existentes permanecem. Escritas no catálogo exigem Admin; operações pessoais exigem somente JWT válido e propriedade do registro.
+
+| Método e rota                                    | Acesso / contrato                                                                                                                      |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| GET /api/categorias                              | Público; categorias ativas do MySQL com nome, descrição e tipo                                                                         |
+| GET /api/medicamentos?busca=texto&categorias=1,2 | Público; texto em nome OU princípio ativo, combinado com qualquer categoria (OR). Sem duplicatas; arquivados omitidos                  |
+| POST/PUT /api/medicamentos[/:id]                 | Admin; aceita também categorias: array de IDs e classificacao_evidencia: texto obrigatório quando houver categorias                    |
+| DELETE /api/medicamentos/:id                     | Admin; data.action = excluido ou arquivado, data.message explica o resultado                                                           |
+| GET /api/meus-medicamentos                       | Autenticado; lista exclusivamente do usuário                                                                                           |
+| POST /api/meus-medicamentos                      | medicamento_id, observacoes opcional, data_inicio/data_fim opcionais, ativo booleano; retorna 201                                      |
+| GET /api/meus-medicamentos/:id                   | Proprietário; inclui medicamento completo mesmo arquivado                                                                              |
+| PUT /api/meus-medicamentos/:id                   | Proprietário; substitui observacoes/datas/ativo, sem trocar proprietário ou medicamento                                                |
+| DELETE /api/meus-medicamentos/:id                | Proprietário; remove vínculo e seus lembretes, preserva catálogo                                                                       |
+| GET /api/lembretes                               | Autenticado; lista pessoal incluindo nome, estado e limites de datas do vínculo                                                        |
+| POST /api/lembretes                              | usuario_medicamento_id, horario HH:MM, dias_semana: array 0–6, data_inicio obrigatória, data_fim opcional, ativo booleano; retorna 201 |
+| PUT /api/lembretes/:id                           | Proprietário; substitui os mesmos campos do POST                                                                                       |
+| DELETE /api/lembretes/:id                        | Proprietário; remove lembrete                                                                                                          |
+
+Datas: AAAA-MM-DD, 2000–2100, limites inclusivos e fim >= início. Observações até 5000 caracteres; evidência até 2000; categorias até 30 IDs. Sem token: 401; catálogo sem Admin: 403; registro alheio/ausente: 404; duplicata: 409; validação: 400. usuario_id do corpo nunca determina propriedade. UNIQUE por usuário/medicamento. Lembretes com mesmo vínculo/horário/dias/datas são rejeitados como duplicata. IDs locais de notificações não fazem parte da API. [Detalhes e limitações](melhorias-pilldex.md).
+
+O contrato abaixo preserva o histórico anterior.
+
 Versão atual: Entrega 3. Consulte a tabela “Entrega 3 — rotas atuais” ao final deste documento e [o relatório](entrega-3.md). Escritas exigem Bearer Token de administrador; apenas consultas são públicas. A seção seguinte é o contrato histórico da Entrega 2.
 
 Base local: http://127.0.0.1:3000/api. Content-Type: application/json. Historicamente, na Entrega 2, GET e POST eram públicos; na Entrega 3, POST/PUT/DELETE são protegidos.

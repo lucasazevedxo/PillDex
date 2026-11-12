@@ -9,6 +9,8 @@ import AdminScreen from "../screens/AdminScreen";
 import AuthScreen from "../screens/AuthScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import AdminListScreen from "../screens/AdminListScreen";
+import LibraryScreen from "../screens/LibraryScreen";
+import RemindersScreen from "../screens/RemindersScreen";
 import { useAuth } from "../context/AuthContext";
 import { Loading } from "../components/UI";
 const Stack = createNativeStackNavigator();
@@ -31,6 +33,8 @@ export default function AppNavigator() {
         <Stack.Screen name="Pesquisa" component={SearchScreen} />
         <Stack.Screen name="Resultados" component={ResultsScreen} />
         <Stack.Screen name="Detalhes" component={DetailsScreen} />
+        <Stack.Screen name="Meus Medicamentos" component={LibraryScreen} />
+        <Stack.Screen name="Lembretes" component={RemindersScreen} />
         {!user ? (
           <Stack.Group navigationKey="guest">
             <Stack.Screen name="Login" component={AuthScreen} />

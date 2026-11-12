@@ -8,6 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { s, colors } from "../styles/theme";
+import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../context/AuthContext";
 export function Button({ title, onPress, disabled = false }) {
   return (
     <Pressable
@@ -25,6 +27,8 @@ export function Button({ title, onPress, disabled = false }) {
   );
 }
 export function Page({ children }) {
+  const navigation = useNavigation();
+  const { user } = useAuth();
   return (
     <ScrollView
       style={s.page}
@@ -32,6 +36,25 @@ export function Page({ children }) {
       keyboardShouldPersistTaps="handled"
     >
       <Text style={s.brand}>+ PillDex</Text>
+      <View style={s.row} accessibilityLabel="Navegação principal">
+        {["Início", "Pesquisa", "Meus Medicamentos", "Lembretes", "Perfil"].map(
+          (name) => (
+            <Pressable
+              key={name}
+              accessibilityRole="link"
+              accessibilityLabel={"Ir para " + name}
+              onPress={() =>
+                navigation.navigate(name === "Perfil" && !user ? "Login" : name)
+              }
+              style={{ padding: 10, minHeight: 44, justifyContent: "center" }}
+            >
+              <Text style={{ color: colors.blue, fontWeight: "600" }}>
+                {name}
+              </Text>
+            </Pressable>
+          ),
+        )}
+      </View>
       {children}
       <View style={s.notice}>
         <Text style={s.small}>
